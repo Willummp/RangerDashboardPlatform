@@ -1,0 +1,9 @@
+fastapi[all]
+uvicorn
+python-dotenv
+aiohttp
+supabase-client
+sqlalchemy
+psycopg2-binary
+google-generativeai
+alembic
