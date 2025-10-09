@@ -1,0 +1,22 @@
+<div class="dashboard-wrapper">
+
+  <div *ngIf="dashboard$ | async as dashboard" class="dashboard-container">
+
+
+    <gridster [options]="gridOptions">
+      <gridster-item
+        *ngFor="let card of dashboard.cards"
+        [item]="{
+          x: card.position_x,
+          y: card.position_y,
+          cols: card.width,
+          rows: card.height
+        }">
+        <div class="card-content">
+          <h3>{{ card.title }}</h3>
+          <p>(Gráfico do tipo: {{ card.chart_type }})</p>
+        </div>
+      </gridster-item>
+    </gridster>
+  </div>
+</div>
