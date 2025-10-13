@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Reseta a margem e o preenchimento padrão do navegador
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; // Garante que o html e o body ocupem 100% da altura da janela
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #e9ecef; // Um fundo levemente cinza para a aplicação
+}
+
+// Garante que o componente principal da aplicação também ocupe 100% da altura
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
