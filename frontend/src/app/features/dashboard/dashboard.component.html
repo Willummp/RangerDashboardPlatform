@@ -1,0 +1,16 @@
+<div class="dashboard-wrapper">
+  <div class="dashboard-container" *ngIf="dashboard">
+    <h1 class="dashboard-title">{{ dashboard.name }}</h1>
+
+    <gridster [options]="gridOptions">
+      <gridster-item *ngFor="let item of gridItems" [item]="item">
+        <div class="card-content">
+          <h3>{{ item['title'] }}</h3>
+          <p>(Gráfico do tipo: {{ item['chart_type'] }})</p>
+        </div>
+      </gridster-item>
+    </gridster>
+
+  </div>
+</div>
+
