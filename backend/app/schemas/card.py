@@ -1,17 +1,10 @@
-# backend/app/schemas/card.py
 from pydantic import BaseModel, ConfigDict
 
-# Campos base compartilhados por todos os schemas de Card
 class CardBase(BaseModel):
     title: str
-    chart_type: str
-    position_x: int
-    position_y: int
-    width: int
-    height: int
-
-# Schema para criar um novo card (recebido pela API)
-class CardCreate(CardBase):
+    chart_type: str | None = "bar"
+class CardCreate(BaseModel):
+    title: str
     dashboard_id: int
 
 # Schema para atualizar um card (campos opcionais)
@@ -24,9 +17,16 @@ class CardUpdate(BaseModel):
     height: int | None = None
 
 # Schema para ler um card (retornado pela API)
-class Card(CardBase):
+# Adicionamos os campos que não estavam no CardBase
+class Card(BaseModel):
     id: int
     dashboard_id: int
+    title: str
+    chart_type: str
+    position_x: int
+    position_y: int
+    width: int
+    height: int
     
-    # Habilita o modo "ORM" para que o Pydantic possa ler dados de objetos SQLAlchemy
+
     model_config = ConfigDict(from_attributes=True)
