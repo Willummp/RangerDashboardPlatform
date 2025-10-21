@@ -1,47 +1,31 @@
-# backend/app/services/dashboard_service.py
 from sqlalchemy.orm import Session
+from sqlalchemy import func, desc
 from app import models, schemas
-import operator # Usaremos para ordenar
 
-# --- Constantes de Layout ---
-GRID_WIDTH = 16 # Aumentado de 12 para 16 colunas
-DEFAULT_CARD_WIDTH = 4
-DEFAULT_CARD_HEIGHT = 4
+# --- CONFIGURAÇÃO DO GRID ---
+GRID_WIDTH = 12          # Largura do grid em unidades (agora com 6 colunas)
+DEFAULT_CARD_WIDTH = 3  # Largura padrão de um novo card (metade do grid)
+DEFAULT_CARD_HEIGHT = 1 # Altura padrão de um novo card (uma linha)
 
-def _calculate_next_position(db: Session, dashboard_id: int) -> tuple[int, int]:
-    """
-    Calcula a próxima posição livre no grid de um dashboard.
-    """
-    existing_cards = db.query(models.Card).filter(models.Card.dashboard_id == dashboard_id).all()
+def _calculate_next_position(db: Session, dashboard_id: int) -> dict:
+    """Calcula a próxima posição livre (x, y) no grid."""
+    last_card = db.query(models.Card).filter(
+        models.Card.dashboard_id == dashboard_id
+    ).order_by(desc(models.Card.id)).first()
 
-    if not existing_cards:
-        return (0, 0) # Primeira posição se o dashboard estiver vazio
+    if not last_card:
+        return {"position_x": 0, "position_y": 0}
 
-    # Ordena os cards por linha (y) e depois por coluna (x) para encontrar o último
-    existing_cards.sort(key=operator.attrgetter('position_y', 'position_x'))
-    
-    # Encontra a linha mais baixa (maior valor de y) que está sendo usada
-    max_y = 0
-    for card in existing_cards:
-        max_y = max(max_y, card.position_y + card.height)
-
-    # Encontra o último card na última linha visual
-    last_card = existing_cards[-1]
-    
-    # Calcula a próxima posição x na mesma linha
+    # Calcula a próxima posição X
     next_x = last_card.position_x + last_card.width
+    next_y = last_card.position_y
 
-    # Se a próxima posição x + a largura do novo card extrapolar o grid, quebra a linha
-    if next_x + DEFAULT_CARD_WIDTH > GRID_WIDTH:
+    # Se a próxima posição X ultrapassar a largura do grid, quebra a linha
+    if next_x >= GRID_WIDTH:
         next_x = 0
-        # A próxima linha y é a linha mais baixa preenchida
-        next_y = max_y
-    else:
-        # Senão, mantém na mesma linha do último card
-        next_y = last_card.position_y
-
-    return (next_x, next_y)
-
+        next_y = last_card.position_y + last_card.height
+    
+    return {"position_x": next_x, "position_y": next_y}
 
 # --- Funções para Dashboards ---
 
@@ -61,18 +45,17 @@ def create_dashboard(db: Session, dashboard: schemas.DashboardCreate):
 # --- Funções para Cards ---
 
 def create_card(db: Session, card: schemas.CardCreate):
-    # 1. Calcula a próxima posição livre
-    next_pos_x, next_pos_y = _calculate_next_position(db, card.dashboard_id)
-
-    # 2. Cria o objeto do modelo com os dados recebidos e os calculados
-    db_card = models.Card(
-        title=card.title,
-        dashboard_id=card.dashboard_id,
-        position_x=next_pos_x,
-        position_y=next_pos_y,
-        width=DEFAULT_CARD_WIDTH,
-        height=DEFAULT_CARD_HEIGHT
-    )
+    """Cria um novo card com posição e tamanho padrão calculados."""
+    next_pos = _calculate_next_position(db, dashboard_id=card.dashboard_id)
+    
+    card_data = card.model_dump()
+    card_data.update(next_pos)
+    
+    # Adiciona o tamanho padrão ao novo card
+    card_data['width'] = DEFAULT_CARD_WIDTH
+    card_data['height'] = DEFAULT_CARD_HEIGHT
+    
+    db_card = models.Card(**card_data)
     db.add(db_card)
     db.commit()
     db.refresh(db_card)
