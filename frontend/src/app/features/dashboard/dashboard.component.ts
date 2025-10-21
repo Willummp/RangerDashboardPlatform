@@ -44,16 +44,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private setupGridOptions(): void {
     this.gridOptions = {
       gridType: 'fit',
-      fixedRowHeight: 60,
-      minCols: 16,
-      maxCols: 16,
-      minRows: 8,
-      maxRows: 8,
+      // Cada linha terá uma altura de 200px
+      fixedRowHeight: 200,
+      // --- CONFIGURAÇÃO DO GRID 2x6 ---
+      minCols: 6,
+      maxCols: 12,
+      minRows: 2,
+      maxRows: 3,
+      // --- FIM DA CONFIGURAÇÃO ---
       draggable: { enabled: true },
       resizable: { enabled: true },
       displayGrid: 'onDrag&Resize',
+      // Callback para salvar a posição quando um card é movido/redimensionado
       itemChangeCallback: (item: GridsterItem) => {
-        console.log('ITEM MUDOU (Ação do usuário)! ID:', item['id'], 'Nova Posição:', {x: item.x, y: item.y});
+        console.log('ITEM MUDOU! ID:', item['id'], 'Nova Posição:', {x: item.x, y: item.y, cols: item.cols, rows: item.rows});
 
         const cardId = item['id'];
         if (!cardId) return;
@@ -81,15 +85,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.websocketService.connect(this.dashboardId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((message: WebSocketMessage) => {
-        if (message.event === 'card_updated') {
-          this.handleCardUpdate(message.data as Card);
+        switch (message.event) {
+          case 'card_updated':
+            this.handleCardUpdate(message.data as Card);
+            break;
+          // Lógica para novos eventos (card_created, etc.) pode ser adicionada aqui
         }
       });
   }
 
-
   private handleCardUpdate(updatedCard: Card): void {
-
     const itemToUpdate = this.gridItems.find(item => item['id'] === updatedCard.id);
 
     if (itemToUpdate && (
@@ -104,6 +109,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         itemToUpdate.y = updatedCard.position_y;
         itemToUpdate.cols = updatedCard.width;
         itemToUpdate.rows = updatedCard.height;
+
+        // Força a biblioteca Gridster a redesenhar a UI
         if (this.gridOptions.api?.optionsChanged) {
           this.gridOptions.api.optionsChanged();
         }
@@ -112,13 +119,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private mapCardsToGridItems(cards: Card[]): GridsterItem[] {
     return cards.map(card => ({
-      id: card.id,
+      id: card.id, // Armazena o ID original do card
       x: card.position_x,
       y: card.position_y,
       cols: card.width,
       rows: card.height,
       title: card.title,
-      chart_type: card.chart_type
+      chartType: card.chart_type
     }));
   }
 }
