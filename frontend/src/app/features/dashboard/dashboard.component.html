@@ -1,16 +1,21 @@
 <div class="dashboard-wrapper">
   <div class="dashboard-container" *ngIf="dashboard">
-    <h1 class="dashboard-title">{{ dashboard.name }}</h1>
+    <!-- <h1 class="dashboard-title">{{ dashboard.name }}</h1> -->
 
     <gridster [options]="gridOptions">
       <gridster-item *ngFor="let item of gridItems" [item]="item">
         <div class="card-content">
           <h3>{{ item['title'] }}</h3>
-          <p>(Gráfico do tipo: {{ item['chart_type'] }})</p>
+          <p>
+            <span style="font-size: 1.5rem; font-weight: bold; color: var(--color-primary)">
+              {{ item['chart_type'] | uppercase }}
+            </span>
+          </p>
+          <!-- Placeholder for real chart -->
+          <div style="flex:1; background: rgba(0,9,91,0.05); border-radius: 4px; margin-top: 8px;"></div>
         </div>
       </gridster-item>
     </gridster>
 
   </div>
 </div>
-

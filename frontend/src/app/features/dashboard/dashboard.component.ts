@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { GridsterConfig, GridsterItem, GridsterModule } from 'angular-gridster2';
 
@@ -26,13 +27,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private websocketService: WebsocketService,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     this.setupGridOptions();
-    this.loadDashboard();
-    this.connectWebSocket();
+
+    // Listen for route changes
+    this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const idParam = params.get('id');
+      this.dashboardId = idParam ? parseInt(idParam, 10) : 1;
+
+      // Reload everything when ID changes
+      this.loadDashboard();
+      // Reconnect WebSocket for new ID
+      this.websocketService.disconnect();
+      this.connectWebSocket();
+    });
   }
 
   ngOnDestroy(): void {
@@ -47,13 +59,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       fixedRowHeight: 60,
       minCols: 16,
       maxCols: 16,
-      minRows: 8,
-      maxRows: 8,
+      minRows: 4,
+      maxRows: 100, // Allow vertical expansion
+      margin: 10,
+      outerMargin: true,
       draggable: { enabled: true },
       resizable: { enabled: true },
       displayGrid: 'onDrag&Resize',
       itemChangeCallback: (item: GridsterItem) => {
-        console.log('ITEM MUDOU (Ação do usuário)! ID:', item['id'], 'Nova Posição:', {x: item.x, y: item.y});
+        console.log('ITEM MUDOU (Ação do usuário)! ID:', item['id'], 'Nova Posição:', { x: item.x, y: item.y });
 
         const cardId = item['id'];
         if (!cardId) return;
@@ -81,10 +95,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.websocketService.connect(this.dashboardId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((message: WebSocketMessage) => {
-        if (message.event === 'card_updated') {
-          this.handleCardUpdate(message.data as Card);
+        switch (message.event) {
+          case 'card_created':
+            this.handleCardCreated(message.data as Card);
+            break;
+          case 'card_updated':
+            this.handleCardUpdate(message.data as Card);
+            break;
+          case 'card_deleted':
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            this.handleCardDeleted(message.data as any);
+            break;
         }
       });
+  }
+
+  private handleCardCreated(newCard: Card): void {
+    console.log('WebSocket: Card Created', newCard);
+    const newItem = this.mapCardsToGridItems([newCard])[0];
+    this.gridItems.push(newItem);
+    if (this.gridOptions.api?.optionsChanged) {
+      this.gridOptions.api.optionsChanged();
+    }
+  }
+
+  private handleCardDeleted(cardId: number | { id: number }): void {
+    console.log('WebSocket: Card Deleted', cardId);
+    const id = typeof cardId === 'object' ? cardId.id : cardId;
+    this.gridItems = this.gridItems.filter(item => item['id'] !== id);
+    if (this.gridOptions.api?.optionsChanged) {
+      this.gridOptions.api.optionsChanged();
+    }
   }
 
 
@@ -93,20 +134,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const itemToUpdate = this.gridItems.find(item => item['id'] === updatedCard.id);
 
     if (itemToUpdate && (
-        itemToUpdate.x !== updatedCard.position_x ||
-        itemToUpdate.y !== updatedCard.position_y ||
-        itemToUpdate.cols !== updatedCard.width ||
-        itemToUpdate.rows !== updatedCard.height
+      itemToUpdate.x !== updatedCard.position_x ||
+      itemToUpdate.y !== updatedCard.position_y ||
+      itemToUpdate.cols !== updatedCard.width ||
+      itemToUpdate.rows !== updatedCard.height
     )) {
-        console.log(`WebSocket: Recebida atualização para o card ${updatedCard.id}. Atualizando a tela.`);
+      console.log(`WebSocket: Recebida atualização para o card ${updatedCard.id}. Atualizando a tela.`);
 
-        itemToUpdate.x = updatedCard.position_x;
-        itemToUpdate.y = updatedCard.position_y;
-        itemToUpdate.cols = updatedCard.width;
-        itemToUpdate.rows = updatedCard.height;
-        if (this.gridOptions.api?.optionsChanged) {
-          this.gridOptions.api.optionsChanged();
-        }
+      itemToUpdate.x = updatedCard.position_x;
+      itemToUpdate.y = updatedCard.position_y;
+      itemToUpdate.cols = updatedCard.width;
+      itemToUpdate.rows = updatedCard.height;
+      if (this.gridOptions.api?.optionsChanged) {
+        this.gridOptions.api.optionsChanged();
+      }
     }
   }
 

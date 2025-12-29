@@ -16,38 +16,35 @@
   --accent-l: 50%;
   --color-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
 
-  /* Backgrounds: Dark Mode Base */
-  --bg-darker: #0b0c15; /* Main Background */
-  --bg-dark: #151621;   /* Card system */
-  --bg-panel: #1e1f2e;  /* Panels */
-  
+  /* Backgrounds: Navy Mode Base */
+  --bg-darker: #00095B;
+  /* Main Background (Navy Blue) */
+  --bg-dark: #00095B;
+  /* Card system base (matches bg for cleanliness) */
+  --bg-panel: #ffffff;
+  /* Panels/Cards (White) */
+
   /* Text */
   --text-main: #ffffff;
+  /* Main text on dark bg */
+  --text-on-card: #00095B;
+  /* Text on white cards */
   --text-muted: #a0a0b0;
-  --text-inverse: #0b0c15;
+  /* Muted text on dark */
+  --text-muted-card: #666677;
+  /* Muted text on white card */
 
   /* Status */
   --color-success: #00e676;
   --color-warning: #ffea00;
   --color-danger: #ff1744;
 
-  /* --- Spacing --- */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-
-  /* --- Borders --- */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --border-color: rgba(255, 255, 255, 0.1);
-
-  /* --- Glassmorphism --- */
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  /* --- Glassmorphism / Cards --- */
+  /* Updated for White Cards on Navy Background */
+  --glass-bg: #ffffff;
+  --glass-border: transparent;
+  /* Solid cards don't need glass borders usually, or subtle grey */
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 /* Reset & Base */
@@ -55,7 +52,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -72,7 +70,12 @@ app-root {
 }
 
 /* Headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0 0 var(--spacing-sm) 0;
   font-weight: 600;
   letter-spacing: -0.02em;
