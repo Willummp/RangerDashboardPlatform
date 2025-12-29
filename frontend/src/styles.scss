@@ -1,17 +1,96 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles & Design System */
 
-// Reseta a margem e o preenchimento padrão do navegador
+:root {
+  /* --- Colors (HSL for flexibility) --- */
+  /* Primary Brand: Deep Futuristic Blue/Purple */
+  --primary-h: 240;
+  --primary-s: 100%;
+  --primary-l: 65%;
+  --color-primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+  --color-primary-dark: hsl(var(--primary-h), var(--primary-s), 45%);
+  --color-primary-light: hsl(var(--primary-h), var(--primary-s), 75%);
+
+  /* Accent: Electric Teal/Cyan */
+  --accent-h: 180;
+  --accent-s: 100%;
+  --accent-l: 50%;
+  --color-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+
+  /* Backgrounds: Dark Mode Base */
+  --bg-darker: #0b0c15; /* Main Background */
+  --bg-dark: #151621;   /* Card system */
+  --bg-panel: #1e1f2e;  /* Panels */
+  
+  /* Text */
+  --text-main: #ffffff;
+  --text-muted: #a0a0b0;
+  --text-inverse: #0b0c15;
+
+  /* Status */
+  --color-success: #00e676;
+  --color-warning: #ffea00;
+  --color-danger: #ff1744;
+
+  /* --- Spacing --- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* --- Borders --- */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --border-color: rgba(255, 255, 255, 0.1);
+
+  /* --- Glassmorphism --- */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%; // Garante que o html e o body ocupem 100% da altura da janela
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #e9ecef; // Um fundo levemente cinza para a aplicação
+  height: 100%;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-darker);
+  color: var(--text-main);
+  overflow-x: hidden;
 }
 
-// Garante que o componente principal da aplicação também ocupe 100% da altura
 app-root {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

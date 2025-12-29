@@ -1,1 +1,18 @@
-<router-outlet></router-outlet>
+<div class="app-container">
+    <aside class="app-sidebar">
+        <app-sidebar></app-sidebar>
+    </aside>
+
+    <main class="app-content">
+        <header class="top-bar glass-panel">
+            <h1>Hello, Ranger</h1>
+            <div class="user-profile">
+                <div class="avatar">R</div>
+            </div>
+        </header>
+
+        <div class="content-scrollable">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+</div>
