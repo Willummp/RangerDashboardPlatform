@@ -5,14 +5,21 @@
     <gridster [options]="gridOptions">
       <gridster-item *ngFor="let item of gridItems" [item]="item">
         <div class="card-content">
-          <h3>{{ item['title'] }}</h3>
-          <p>
-            <span style="font-size: 1.5rem; font-weight: bold; color: var(--color-primary)">
-              {{ item['chart_type'] | uppercase }}
-            </span>
+          <!-- Typography Header -->
+          <div class="card-header-group">
+            <h3 class="card-title"
+              [ngClass]="'text-' + (item['title_size'] || 'md') + ' color-' + (item['title_color'] || 'default')">
+              {{ item['title'] }}
+            </h3>
+            <p *ngIf="item['subtitle']" class="card-subtitle" [ngClass]="'text-' + (item['subtitle_size'] || 'sm')">
+              {{ item['subtitle'] }}
+            </p>
+          </div>
+
+          <p class="chart-type-badge">
+            <span class="bad-icon">{{ chartConfig[item['chart_type']].icon }}</span>
+            <span class="badge-text">{{ chartConfig[item['chart_type']].label }}</span>
           </p>
-          <!-- Placeholder for real chart -->
-          <div style="flex:1; background: rgba(0,9,91,0.05); border-radius: 4px; margin-top: 8px;"></div>
         </div>
       </gridster-item>
     </gridster>

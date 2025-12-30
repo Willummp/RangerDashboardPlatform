@@ -1,0 +1,38 @@
+/* Navy & White Theme */
+:root {
+    /* Backgrounds */
+    --bg-darker: #00095B;
+    /* Navy Blue Background */
+    --bg-panel: rgba(255, 255, 255, 0.95);
+    /* White Cards */
+    --glass-bg: rgba(255, 255, 255, 0.90);
+
+    /* Borders */
+    --glass-border: rgba(255, 255, 255, 0.6);
+
+    /* Typography */
+    --text-main: #FFFFFF;
+    /* Main text on Navy bg */
+    --text-muted: #8F9BB3;
+    /* Muted text on Navy bg */
+
+    --text-on-card: #00095B;
+    /* Navy text on White card */
+    --text-muted-card: #60687d;
+
+    /* Accents */
+    --color-primary: #3366FF;
+    --color-success: #00D68F;
+    --color-warning: #FFAA00;
+    --color-danger: #FF3D71;
+    --color-info: #0095FF;
+}
+
+/* Glassmorphism Helper */
+.glass-panel {
+    background: var(--bg-panel);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.20);
+}

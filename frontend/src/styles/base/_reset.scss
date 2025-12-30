@@ -1,0 +1,20 @@
+/* Base Reset & Typography */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-darker);
+    color: var(--text-main);
+    overflow: hidden;
+    /* App-like feel */
+}
+
+app-root {
+    display: block;
+    height: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}

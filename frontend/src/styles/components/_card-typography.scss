@@ -1,0 +1,63 @@
+/* Card Typography System */
+
+/* Font Sizes */
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.text-md {
+    font-size: 1.1rem;
+}
+
+.text-lg {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.text-xl {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* Colors */
+.color-default {
+    color: var(--text-on-card);
+}
+
+.color-primary {
+    color: var(--color-primary);
+}
+
+.color-secondary {
+    color: var(--color-info);
+}
+
+.color-muted {
+    color: var(--text-muted-card);
+}
+
+.color-success {
+    color: var(--color-success);
+}
+
+.color-danger {
+    color: var(--color-danger);
+}
+
+/* Helpers */
+.card-header-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--spacing-sm);
+
+    .card-title {
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .card-subtitle {
+        margin-top: 4px;
+        color: var(--text-muted-card);
+        line-height: 1.4;
+    }
+}

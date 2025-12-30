@@ -8,7 +8,13 @@ class Card(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False, default="Novo Card")
+    subtitle = Column(String, nullable=True)
     chart_type = Column(String, nullable=False, default="bar")
+
+    # Tipografia
+    title_size = Column(String, default="md")
+    title_color = Column(String, default="default")
+    subtitle_size = Column(String, default="sm")
     
     # Propriedades do grid
     position_x = Column(Integer, nullable=False)

@@ -8,6 +8,8 @@ import { ApiService } from '../../core/services/api.service';
 import { WebsocketService, WebSocketMessage } from '../../core/services/websocket.service';
 import { Dashboard } from '../../shared/models/dashboard.model';
 import { Card } from '../../shared/models/card.model';
+import { CHART_CONFIG } from '../../shared/config/chart.config';
+import { ChartType } from '../../shared/enums/chart-type.enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +22,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public dashboard: Dashboard | null = null;
   public gridItems: GridsterItem[] = [];
   public gridOptions!: GridsterConfig;
+  public chartConfig = CHART_CONFIG;
+  public ChartType = ChartType;
 
   private destroy$ = new Subject<void>();
   private dashboardId = 1;
@@ -59,8 +63,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       fixedRowHeight: 60,
       minCols: 16,
       maxCols: 16,
-      minRows: 4,
-      maxRows: 100, // Allow vertical expansion
+      minRows: 3,
+      maxRows: 100,
       margin: 10,
       outerMargin: true,
       draggable: { enabled: true },
@@ -158,7 +162,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       y: card.position_y,
       cols: card.width,
       rows: card.height,
+
       title: card.title,
+      subtitle: card.subtitle,
+      title_size: card.title_size,
+      title_color: card.title_color,
+      subtitle_size: card.subtitle_size,
       chart_type: card.chart_type
     }));
   }

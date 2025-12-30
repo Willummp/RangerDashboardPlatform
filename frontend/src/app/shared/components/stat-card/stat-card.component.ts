@@ -1,11 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-stat-card',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-stat-card',
+  standalone: true,
+  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
     <div class="stat-card glass-panel">
       <div class="icon-container" [style.color]="iconColor">
         <span class="icon">{{ icon }}</span>
@@ -20,7 +21,7 @@ import { CommonModule } from '@angular/common';
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     .stat-card {
       padding: var(--spacing-lg);
       display: flex;
@@ -79,11 +80,11 @@ import { CommonModule } from '@angular/common';
   `]
 })
 export class StatCardComponent {
-    @Input() label: string = '';
-    @Input() value: string = '';
-    @Input() icon: string = '';
-    @Input() trend: number = 0;
-    @Input() iconColor: string = 'var(--color-primary)';
+  @Input() label: string = '';
+  @Input() value: string = '';
+  @Input() icon: string = '';
+  @Input() trend: number = 0;
+  @Input() iconColor: string = 'var(--color-primary)';
 
-    Math = Math;
+  Math = Math;
 }
