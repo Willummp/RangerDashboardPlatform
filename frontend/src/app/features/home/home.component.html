@@ -1,0 +1,28 @@
+<div class="home-container">
+    <div class="header">
+        <h1>Meus Dashboards</h1>
+        <p>Selecione um ambiente para monitorar</p>
+    </div>
+
+    <div class="dashboard-grid" *ngIf="!isLoading">
+        <div class="dashboard-card glass-panel" *ngFor="let dashboard of dashboards"
+            (click)="navigateToDashboard(dashboard.id)">
+            <div class="card-icon">
+                📊
+            </div>
+            <div class="card-info">
+                <h3>Dashboard {{ dashboard.id }}</h3>
+                <p>Clique para visualizar</p>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="dashboards.length === 0">
+            <p>Nenhum dashboard encontrado.</p>
+        </div>
+    </div>
+
+    <div class="loading" *ngIf="isLoading">
+        <p>Carregando dashboards...</p>
+    </div>
+</div>

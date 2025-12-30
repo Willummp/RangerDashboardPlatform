@@ -17,6 +17,10 @@ export class ApiService {
     return this.http.get<Dashboard>(`${this.apiUrl}/dashboards/${dashboardId}`);
   }
 
+  getDashboards(): Observable<Dashboard[]> {
+    return this.http.get<Dashboard[]>(`${this.apiUrl}/dashboards/`);
+  }
+
   updateCard(cardId: number, changes: Partial<Card>): Observable<Card> {
     return this.http.patch<Card>(`${this.apiUrl}/dashboards/cards/${cardId}`, changes);
   }
