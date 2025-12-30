@@ -21,3 +21,66 @@
     overflow-y: auto;
     /* padding-bottom: var(--spacing-lg); */
 }
+
+/* --- Mobile Landscape Enforcement --- */
+.rotate-overlay {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-darker);
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.rotate-content {
+    color: var(--text-main);
+
+    .icon {
+        font-size: 4rem;
+        margin-bottom: var(--spacing-md);
+        animation: rotate-icon 2s infinite ease-in-out;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    p {
+        color: var(--text-muted);
+    }
+}
+
+@keyframes rotate-icon {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-90deg);
+    }
+
+    100% {
+        transform: rotate(-90deg);
+    }
+}
+
+/* Show overlay only on Portrait Mobile/Tablet */
+@media screen and (orientation: portrait) and (max-width: 900px) {
+    .rotate-overlay {
+        display: flex;
+    }
+
+    /* Hide main content when overlay is visible to prevent scrolling */
+    .app-content {
+        display: none;
+    }
+}
