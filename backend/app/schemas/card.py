@@ -11,6 +11,11 @@ class CardBase(BaseModel):
 class CardCreate(BaseModel):
     title: str
     dashboard_id: int
+    subtitle: str | None = None
+    chart_type: ChartType | None = ChartType.BAR
+    title_size: SizeOption | None = SizeOption.MD
+    title_color: ColorOption | None = ColorOption.DEFAULT
+    subtitle_size: SizeOption | None = SizeOption.SM
 
 # Schema para atualizar um card (campos opcionais)
 class CardUpdate(BaseModel):
