@@ -11,10 +11,12 @@ import { Card } from '../../shared/models/card.model';
 import { CHART_CONFIG } from '../../shared/config/chart.config';
 import { ChartType } from '../../shared/enums/chart-type.enum';
 
+import { ChartRendererComponent } from '../../shared/components/chart-renderer/chart-renderer.component';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, GridsterModule],
+  imports: [CommonModule, GridsterModule, ChartRendererComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -134,23 +136,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   private handleCardUpdate(updatedCard: Card): void {
-
     const itemToUpdate = this.gridItems.find(item => item['id'] === updatedCard.id);
 
-    if (itemToUpdate && (
-      itemToUpdate.x !== updatedCard.position_x ||
-      itemToUpdate.y !== updatedCard.position_y ||
-      itemToUpdate.cols !== updatedCard.width ||
-      itemToUpdate.rows !== updatedCard.height
-    )) {
-      console.log(`WebSocket: Recebida atualização para o card ${updatedCard.id}. Atualizando a tela.`);
+    if (itemToUpdate) {
+      // Update visual/data properties immediately
+      itemToUpdate['title'] = updatedCard.title;
+      itemToUpdate['subtitle'] = updatedCard.subtitle;
+      itemToUpdate['chart_type'] = updatedCard.chart_type;
+      itemToUpdate['title_size'] = updatedCard.title_size;
+      itemToUpdate['title_color'] = updatedCard.title_color;
+      itemToUpdate['subtitle_size'] = updatedCard.subtitle_size;
 
-      itemToUpdate.x = updatedCard.position_x;
-      itemToUpdate.y = updatedCard.position_y;
-      itemToUpdate.cols = updatedCard.width;
-      itemToUpdate.rows = updatedCard.height;
-      if (this.gridOptions.api?.optionsChanged) {
-        this.gridOptions.api.optionsChanged();
+      // Check key gridster properties changes
+      if (
+        itemToUpdate.x !== updatedCard.position_x ||
+        itemToUpdate.y !== updatedCard.position_y ||
+        itemToUpdate.cols !== updatedCard.width ||
+        itemToUpdate.rows !== updatedCard.height
+      ) {
+        console.log(`WebSocket: Layout update for card ${updatedCard.id}`);
+        itemToUpdate.x = updatedCard.position_x;
+        itemToUpdate.y = updatedCard.position_y;
+        itemToUpdate.cols = updatedCard.width;
+        itemToUpdate.rows = updatedCard.height;
+
+        if (this.gridOptions.api?.optionsChanged) {
+          this.gridOptions.api.optionsChanged();
+        }
       }
     }
   }

@@ -15,11 +15,9 @@
               {{ item['subtitle'] }}
             </p>
           </div>
-
-          <p class="chart-type-badge">
-            <span class="bad-icon">{{ chartConfig[item['chart_type']].icon }}</span>
-            <span class="badge-text">{{ chartConfig[item['chart_type']].label }}</span>
-          </p>
+          <div style="flex: 1; min-height: 0; overflow: hidden;">
+            <app-chart-renderer [type]="item['chart_type']" [title]="item['title']"></app-chart-renderer>
+          </div>
         </div>
       </gridster-item>
     </gridster>
