@@ -6,7 +6,7 @@ import operator # Usaremos para ordenar
 # --- Constantes de Layout ---
 GRID_WIDTH = 16 # Aumentado de 12 para 16 colunas
 DEFAULT_CARD_WIDTH = 4
-DEFAULT_CARD_HEIGHT = 4
+DEFAULT_CARD_HEIGHT = 1
 
 def _calculate_next_position(db: Session, dashboard_id: int) -> tuple[int, int]:
     """
@@ -65,8 +65,12 @@ def create_card(db: Session, card: schemas.CardCreate):
     next_pos_x, next_pos_y = _calculate_next_position(db, card.dashboard_id)
 
     # 2. Cria o objeto do modelo com os dados recebidos e os calculados
+    # Usa model_dump para pegar todos os campos extras (chart_type, subtitle, etc)
+    # excluindo os que calculamos manualmente ou que não queremos sobrescrever agora
+    card_data = card.model_dump(exclude={'dashboard_id'})
+    
     db_card = models.Card(
-        title=card.title,
+        **card_data,
         dashboard_id=card.dashboard_id,
         position_x=next_pos_x,
         position_y=next_pos_y,
