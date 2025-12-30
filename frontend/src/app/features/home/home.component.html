@@ -4,7 +4,7 @@
         <p>Selecione um ambiente para monitorar</p>
     </div>
 
-    <div class="dashboard-grid" *ngIf="!isLoading">
+    <div class="dashboard-grid" *ngIf="!isLoading && !errorMessage">
         <div class="dashboard-card glass-panel" *ngFor="let dashboard of dashboards"
             (click)="navigateToDashboard(dashboard.id)">
             <div class="card-icon">
@@ -20,6 +20,12 @@
         <div class="empty-state" *ngIf="dashboards.length === 0">
             <p>Nenhum dashboard encontrado.</p>
         </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" *ngIf="errorMessage" style="text-align: center; color: var(--color-danger);">
+        <p>{{ errorMessage }}</p>
+        <button (click)="loadDashboards()" style="margin-top: 10px; padding: 10px 20px;">Tentar Novamente</button>
     </div>
 
     <div class="loading" *ngIf="isLoading">

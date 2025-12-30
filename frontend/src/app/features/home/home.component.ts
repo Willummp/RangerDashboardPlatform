@@ -14,6 +14,7 @@ import { Dashboard } from '../../shared/models/dashboard.model';
 export class HomeComponent implements OnInit {
     dashboards: Dashboard[] = [];
     isLoading = true;
+    errorMessage: string | null = null;
 
     constructor(
         private apiService: ApiService,
@@ -32,6 +33,7 @@ export class HomeComponent implements OnInit {
             },
             error: (err) => {
                 console.error('Failed to load dashboards', err);
+                this.errorMessage = `Erro ao carregar dashboards: ${err.message || 'Erro desconhecido'}`;
                 this.isLoading = false;
             }
         });
